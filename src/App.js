@@ -25,7 +25,7 @@ class App extends Component {
         <Directory campsites={this.state.campsites} /> */}
       </div>
     );
-  }
+  };
 }
 
 export default App;
