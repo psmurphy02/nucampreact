@@ -35,7 +35,7 @@ function RenderCampsite({ campsite }) {
   );
 }
 
-function RenderComments({ comments }) {
+function RenderComments({ comments, addComment, campsiteId }) {
   if (comments) {
     return (
       <div className="col-5-md m-1">
@@ -56,7 +56,7 @@ function RenderComments({ comments }) {
             </div>
           );
         })}
-        <CommentForm />
+        <CommentForm campsiteId={campsiteId} addComment={addComment} />
       </div>
     );
   }
@@ -81,7 +81,11 @@ function CampsiteInfo(props) {
             </div>
           </div>
           <RenderCampsite campsite={props.campsite} />
-          <RenderComments comments={props.comment} />
+          <RenderComments 
+            comments={props.comment} 
+            addComment={props.addComment}
+            campsiteId={props.campsite.id}
+            />
         </div>
         {/* <CommentForm /> */}
       </div>
@@ -99,6 +103,8 @@ class CommentForm extends React.Component {
     };
   }
 
+//See Week 5 Exercise: Redux Actions for nucamp code 
+
   toggleCommentModal = () => {
     this.setState({
       isModalOpen: !this.state.isModalOpen,
@@ -106,8 +112,8 @@ class CommentForm extends React.Component {
   };
 
   handleSubmit(values) {
-    console.log(JSON.stringify(values));
-    alert(JSON.stringify(values));
+    this.toggleCommentModal();
+    this.props.addComment(this.props.campsiteId, values.rating, values.author, values.text);
   }
 
   render() {
@@ -139,14 +145,14 @@ class CommentForm extends React.Component {
                 </Col>
               </Row>
               <Row className="form-group">
-                <Label htmlFor="yourName" md={2}>
+                <Label htmlFor="author" md={2}>
                   Your Name
                 </Label>
                 <Col md={10}>
                   <Control.text
-                    model=".yourName"
-                    id="yourName"
-                    name="yourName"
+                    model=".author"
+                    id="author"
+                    name="author"
                     placeholder="Your Name"
                     className="form-control"
                     validators={{
@@ -157,7 +163,7 @@ class CommentForm extends React.Component {
                   />
                   <Errors
                     className="text-danger"
-                    model=".yourName"
+                    model=".author"
                     show="touched"
                     component="div"
                     messages={{
@@ -172,14 +178,14 @@ class CommentForm extends React.Component {
               
               
               <Row className="form-group">
-                <Label htmlFor="comment" md={2}>
+                <Label htmlFor="text" md={2}>
                   Your Feedback
                 </Label>
                 <Col md={10}>
                   <Control.textarea
-                    model=".comment"
-                    id="comment"
-                    name="comment"
+                    model=".text"
+                    id="text"
+                    name="text"
                     rows="6"
                     className="form-control"
                   />
