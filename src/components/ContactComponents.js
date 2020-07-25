@@ -8,7 +8,8 @@ import {
   Row,
 } from "reactstrap";
 import { Link } from "react-router-dom";
-import { Control, Form, Errors, actions } from "react-redux-form";
+import { Control, Form, Errors } from "react-redux-form";
+import { postFeedback } from "../redux/ActionCreators";
 
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !val || val.length <= len;
@@ -41,8 +42,15 @@ class Contact extends Component {
   }
 
   handleSubmit(values) {
-    console.log("Current state is: " + JSON.stringify(values));
-    alert("Current state is: " + JSON.stringify(values));
+    this.props.postFeedback(
+      values.firstName,
+      values.lastName,
+      values.phoneNum,
+      values.email,
+      values.agree,
+      values.contactType,
+      values.feedback
+    );
     this.props.resetFeedbackForm();
   }
 
@@ -93,7 +101,10 @@ class Contact extends Component {
             <hr />
           </div>
           <div className="col-md-10">
-            <Form model="feedbackForm" onSubmit={(values) => this.handleSubmit(values)}>
+            <Form
+              model="feedbackForm"
+              onSubmit={(values) => this.handleSubmit(values)}
+            >
               <Row className="form-group">
                 <Label htmlFor="firstName" md={2}>
                   First Name
@@ -181,7 +192,7 @@ class Contact extends Component {
                       required: "Required",
                       minLength: "Must be at least 10 numbers",
                       maxLength: "Must be 15 numbers or less",
-                      isNumber: "Must be a number"
+                      isNumber: "Must be a number",
                     }}
                   />
                 </Col>
@@ -209,7 +220,7 @@ class Contact extends Component {
                     component="div"
                     messages={{
                       required: "Required",
-                      validEmail: "Invalid email address"
+                      validEmail: "Invalid email address",
                     }}
                   />
                 </Col>
